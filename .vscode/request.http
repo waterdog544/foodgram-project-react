@@ -1,0 +1,103 @@
+###
+POST http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
+{
+    "first_name": "Иван",
+    "last_name": "Иванов",
+    "email": "test2@mail.ru",
+    "username": "test2.user",
+    "password": "Solnce544"
+}
+###
+###
+GET  http://127.0.0.1:8000/api/users/9/
+Content-Type: application/json
+Authorization: Token c232953b091e6f0403ef427169ecbc5da025d5a7
+###
+###
+GET  http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+Authorization: Token 0d33ffbceeb4d0465cc2dfc317e5bad3c0bd10ba
+######
+POST  http://127.0.0.1:8000/api/auth/token/logout/
+Content-Type: application/json
+Authorization: Token b10f0625e550349680d4919b71d18a8fb6898905
+###
+
+###
+POST  http://127.0.0.1:8000/api/auth/token/logout/
+Content-Type: application/json
+
+###
+###
+POST  http://127.0.0.1:8000/api/auth/token/login/
+Content-Type: application/json
+
+{
+    "email": "test2@mail.ru",
+    "password": "Solnce544"
+}
+###
+###
+POST  http://127.0.0.1:8000/api/auth/token/login/
+Content-Type: application/json
+
+{
+    "email": "gjktn@list.ru",
+    "password": "Solnce544"
+}
+###
+admin 0d33ffbceeb4d0465cc2dfc317e5bad3c0bd10ba
+###
+POST  http://127.0.0.1:8000/api/users/set_password/
+Content-Type: application/json
+Authorization: Token 0d33ffbceeb4d0465cc2dfc317e5bad3c0bd10ba
+
+{
+    "new_password": "Solnce54",
+    "current_password": "Solnce544"
+}
+###
+###
+GET http://130.193.42.75/api/v1/titles/
+Content-Type: application/json
+###
+###
+GET http://127.0.0.1:8000/api/v1/titles/
+Content-Type: application/json
+###
+###
+GET http://127.0.0.1:8000/api/v1/genres/
+Content-Type: application/json
+###
+###
+POST http://127.0.0.1:8000/api/v1/auth/signup/
+Content-Type: application/json
+
+{
+"email": "gjktn@list.ru",
+"username": "lisa"
+}
+###
+POST http://127.0.0.1:8000/api/v1/auth/token/
+Content-Type: application/json
+
+{
+"username": "lisa",
+"confirmation_code": "1b29055c-4253-47bf-a08d-34b08078c804"
+}
+###
+POST http://127.0.0.1:8000/api/v1/titles/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYzMjQxNDUxLCJpYXQiOjE2NjI2MzY2NTEsImp0aSI6ImZmYmRhNTczOGYzNTQzZWY4ZmQ5ZmEyMGYzNDFlY2U2IiwidXNlcl9pZCI6MX0.8C8Rl9s_d4dG4_okJXZquEE67l3qGY-Sxey5SLUrNrc
+
+{
+"name": "Волшебник Изумрудного города",
+"year": 1939,
+"description": "Сказочная повесть",
+"genre": [
+    "classical"
+],
+"category": "book"
+}

@@ -1,0 +1,7 @@
+Django==2.2.19
+importlib-metadata==4.2.0
+mccabe==0.7.0
+pytz==2022.2.1
+sqlparse==0.4.2
+typing_extensions==4.3.0
+zipp==3.8.1
