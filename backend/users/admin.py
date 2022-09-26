@@ -10,11 +10,6 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'username',
         'password',
-        'recipes',
-        'favorit_recipes',
-        'subscriptions',
-        'subscribers',
-        'recips_in_shopping_cart'
     )
     list_filter = ('email', 'first_name')
     list_editable = (

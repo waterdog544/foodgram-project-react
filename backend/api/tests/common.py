@@ -1,9 +1,11 @@
 from users.models import User
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
+from api.tests.fixtures.fixture_user import admin_client
 
 
 def create_users_api(admin_client):
+    admin_client
     data = {
         'email': 'vpupkin@yandex.ru',
         'username': 'vasya.pupkin',

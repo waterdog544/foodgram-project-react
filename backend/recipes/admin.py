@@ -1,6 +1,6 @@
 from django.contrib import admin
-from recipes.models import (IngredienRecipe, Ingredient, Recipe, ShoppingCart,
-                            ShoppingCartIngredient, Subscribe, Tag, TagRecipe,
+from recipes.models import (IngredientRecipe, Ingredient, Recipe, ShoppingCart,
+                            ShoppingCartIngredient, Tag, TagRecipe,
                             UserRecipe)
 
 
@@ -16,33 +16,21 @@ class UserRecipeAdmin(admin.ModelAdmin):
     )
 
 
-class SubscribeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'author',
-        'subscriber'
-    )
-    list_editable = (
-        'author',
-        'subscriber'
-    )
-
-
 class ShoppingCartIngredientAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'ingredien',
+        'ingredient',
         'shopping_cart',
         'amount',
     )
     list_editable = (
-        'ingredien',
+        'ingredient',
         'shopping_cart',
         'amount',
     )
     fields = (
         'id',
-        'ingredien',
+        'ingredient',
         'recipe',
         'amount',
     )
@@ -55,7 +43,6 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         'recipe',
     )
     list_editable = (
-        'name',
         'user',
         'recipe',
     )
@@ -87,7 +74,6 @@ class TagRecipeAdmin(admin.ModelAdmin):
         'recipe'
     )
     list_editable = (
-        'id',
         'tag',
         'recipe'
     )
@@ -99,6 +85,14 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit',
     )
+    list_editable = (
+        'name',
+        'measurement_unit',
+    )
+    fields = (
+        'name',
+        'measurement_unit',
+    )
     list_filter = ('name',)
     empty_value_display = '-пусто-'
 
@@ -106,12 +100,12 @@ class IngredientAdmin(admin.ModelAdmin):
 class IngredientRecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'ingredien',
+        'ingredient',
         'recipe',
         'amount',
     )
     list_editable = (
-        'ingredien',
+        'ingredient',
         'recipe',
         'amount',
     )
@@ -132,38 +126,32 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'text',
         'cooking_time',
-        'tags',
     )
     fields = (
-        'id',
         'author',
-        'pub_date',
         'name',
         'image',
         'text',
         'cooking_time',
-        'tags',
-        'sum_favorite'
+        # 'sum_favorite'
+        # 'tags'
     )
     list_editable = (
         'author',
-        'pub_date',
         'name',
         'text',
         'cooking_time',
-        'tags',
     )
-    list_filter = ('name', 'author', 'recipe__tags')
-    list_select_related = ('tags',)
+    list_filter = ('name', 'author', 'tags')
+    # list_select_related = ('tags',)
     empty_value_display = '-пусто-'
 
 
 admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(IngredienRecipe, IngredientRecipeAdmin)
+admin.site.register(IngredientRecipe, IngredientRecipeAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(TagRecipe, TagRecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
 admin.site.register(ShoppingCartIngredient, ShoppingCartIngredientAdmin)
-admin.site.register(Subscribe, SubscribeAdmin)
 admin.site.register(UserRecipe, UserRecipeAdmin)

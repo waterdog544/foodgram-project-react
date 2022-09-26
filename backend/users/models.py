@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from recipes.models import Recipe
 
 
 class User(AbstractUser):
@@ -22,23 +21,18 @@ class User(AbstractUser):
         help_text='Email адрес пользователя',
         unique=True
     )
-    favorit_recipes = models.ManyToManyField(
-        Recipe,
-        through='UserRecipe',
+    favorite_recipes = models.ManyToManyField(
+        'recipes.Recipe',
+        through='recipes.UserRecipe',
         blank=True,
-        null=True,
         verbose_name='Избранные рецепты'
     )
     subscriptions = models.ManyToManyField(
-        User,
-        through='Subscribe',
+        'self',
         verbose_name='Подписки на авторов',
+        related_name='subcribers'
     )
-    subcribers = models.ManyToManyField(
-        User,
-        through='Subscribe',
-        verbose_name='Подписчики',
-    )
+
 
     def __str__(self):
         return self.username

@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api.apps.ApiConfig',
-    'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig',
+    'api',
+    'recipes',
+    'users',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -154,3 +154,4 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.IsAuthenticated'],
     }
 }
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
