@@ -1,10 +1,10 @@
 from django.contrib import admin
-from recipes.models import (IngredientRecipe, Ingredient, Recipe, ShoppingCart,
-                            ShoppingCartIngredient, Tag, TagRecipe,
-                            UserRecipe)
+from recipes.models import (IngredientRecipe, Ingredient, Recipe,
+                            ShoppingCartRecipe, Tag, TagRecipe,
+                            UserFavoriteRecipe)
 
 
-class UserRecipeAdmin(admin.ModelAdmin):
+class UserFavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'user',
@@ -16,27 +16,31 @@ class UserRecipeAdmin(admin.ModelAdmin):
     )
 
 
-class ShoppingCartIngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'ingredient',
-        'shopping_cart',
-        'amount',
-    )
-    list_editable = (
-        'ingredient',
-        'shopping_cart',
-        'amount',
-    )
-    fields = (
-        'id',
-        'ingredient',
-        'recipe',
-        'amount',
-    )
+# class ShoppingCartIngredientAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'id',
+#         'ingredient',
+#         'shopping_cart',
+#         'amount',
+#     )
+#     list_editable = (
+#         'ingredient',
+#         'shopping_cart',
+#         'amount',
+#     )
+#     fields = (
+#         'id',
+#         'ingredient',
+#         'recipe',
+#         'amount',
+#     )
 
 
-class ShoppingCartAdmin(admin.ModelAdmin):
+# # class ShoppingCartIngredientInline(admin.TabularInline):
+# #     model = ShoppingCartIngredient.ingredient.through
+
+
+class ShoppingCartRecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'user',
@@ -50,6 +54,14 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         'user',
         'recipe',
     )
+    fields = (
+        'user',
+        'recipe',
+        # 'ingredients',
+        # 'amount'
+    )
+    # filter_horizontal = ('ingredient',)
+    # inlines = (ShoppingCartIngredientInline,)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -110,12 +122,19 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
         'amount',
     )
     fields = (
-        'id',
-        'ingredien',
+        'ingredient',
         'recipe',
         'amount',
     )
     empty_value_display = '-пусто-'
+
+
+class IngredientInline(admin.TabularInline):
+    model = Recipe.ingredients.through
+
+
+class TagInline(admin.TabularInline):
+    model = Recipe.tags.through
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -126,24 +145,30 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'text',
         'cooking_time',
+        'added_to_favorite'
     )
     fields = (
         'author',
         'name',
         'image',
+        'image_tag',
         'text',
         'cooking_time',
-        # 'sum_favorite'
-        # 'tags'
+        'added_to_favorite'
     )
+    readonly_fields = ('image_tag', 'added_to_favorite')
+    inlines = (IngredientInline, TagInline)
     list_editable = (
         'author',
         'name',
         'text',
         'cooking_time',
     )
-    list_filter = ('name', 'author', 'tags')
-    # list_select_related = ('tags',)
+    list_filter = (
+        'name',
+        'author',
+        'tags',
+    )
     empty_value_display = '-пусто-'
 
 
@@ -152,6 +177,5 @@ admin.site.register(IngredientRecipe, IngredientRecipeAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(TagRecipe, TagRecipeAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(ShoppingCart, ShoppingCartAdmin)
-admin.site.register(ShoppingCartIngredient, ShoppingCartIngredientAdmin)
-admin.site.register(UserRecipe, UserRecipeAdmin)
+admin.site.register(ShoppingCartRecipe, ShoppingCartRecipeAdmin)
+admin.site.register(UserFavoriteRecipe, UserFavoriteRecipeAdmin)
