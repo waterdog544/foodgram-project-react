@@ -143,8 +143,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-
+    'PAGE_SIZE': 2,
 }
 
 DJOSER = {
@@ -155,7 +154,9 @@ DJOSER = {
         'current_user': 'api.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.IsAuthenticated'],
-    }
+        'user_list': ['rest_framework.permissions.AllowAny'],
+        'user': ['rest_framework.permissions.IsAuthenticated']
+    },
+    'HIDE_USERS': False,
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

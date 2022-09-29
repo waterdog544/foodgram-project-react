@@ -27,18 +27,17 @@ class User(AbstractUser):
         blank=True,
         verbose_name='Избранные рецепты'
     )
-    subscriptions = models.ManyToManyField(
+    subscribed = models.ManyToManyField(
         'self',
-        verbose_name='Подписки на авторов',
+        through='Subscriptions',
         blank=True,
-        related_name='subcribers'
     )
 
     def __str__(self):
         return self.username
 
     def is_subscribed(self, anyuser):
-        return self.subscriptions.filter(id=anyuser.id).exists()
+        return self.subscribed.filter(id=anyuser.id).exists()
 
     def is_favorited(self, anyrecipe):
         return self.favorite_recipes.filter(id=anyrecipe.id).exists()
@@ -49,3 +48,25 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+class Subscriptions(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Автор'
+    )
+    subscriber = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subcribers',
+        verbose_name='Подписчик'
+    )
+
+    def __str__(self):
+        return f'{self.subscriber} на {self.author} '
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+    

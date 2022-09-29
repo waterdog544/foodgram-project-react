@@ -16,6 +16,23 @@ recipe_i = recipe[0]
 # print('recipe.tags.count: ', recipe.tags.count())
 # print('recipe.count_add_favorite:', recipe.added_to_favorite)
 # print('name test:', test)
-print('subscri test:', test.is_subscribed(lisa))
-print('favorite recipes test:', test.is_favorited(recipe_j), recipe_j)
-print('is_in_shopping_cart recipes test:', test.is_in_shopping_cart(recipe_i), recipe_i)
+print('subscribe', test.subscribed.all())
+print('subscri test:', lisa.is_subscribed(test))
+# print('favorite recipes test:', test.is_favorited(recipe_j), recipe_j)
+# print('is_in_shopping_cart recipes test:', test.is_in_shopping_cart(recipe_i), recipe_i)
+# /^#[0-9A-F]{6}$/i.test('#AABBCC')
+# import re
+# str = ['#ffffff0', "#ffff00", "#fff0f5"]
+
+
+# def color_check(str):
+#     match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', str)
+#     if match:                      
+#         print('Hex is valid')
+
+#     else:
+#         print('Hex is not valid')
+
+
+# for i in str:
+#     color_check(i)
