@@ -1,6 +1,194 @@
 ###
-POST http://127.0.0.1:8000/api/users/
+GET  http://127.0.0.1:8000/api/users/?limit=1
 Content-Type: application/json
+###
+###
+GET  http://127.0.0.1:8000/api/users/me/
+Content-Type: application/json
+Authorization: Token 1eaf500981caa90810df8dcb7c260d222e8407f2
+###
+###
+POST http://127.0.0.1:8000/api/users/set_password/
+Content-Type: application/json
+Authorization: Token 1eaf500981caa90810df8dcb7c260d222e8407f2
+
+{
+  "new_password": "Solnce54",
+  "current_password": "Solnce544"
+}
+###
+###
+DELETE      http://127.0.0.1:8000/api/users/3/
+Content-Type: application/json
+
+
+###
+POST      http://127.0.0.1:8000/api/ingredients/
+Content-Type: application/json
+Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+
+
+  {
+    
+    "name": "Капуст",
+    "measurement_unit": "кг."
+  }
+
+###
+POST      http://127.0.0.1:8000/api/tags/
+Content-Type: application/json
+Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+
+
+  {
+
+    "name": "Обед3",
+    "color": "#0f0d0a",
+    "slug": "dinner"
+  }
+
+###
+###
+POST        http://127.0.0.1:8000/api/tags/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+
+{
+  
+    
+    "name": "Капуста",
+    "measurement_unit": "кг"
+  
+}
+###
+###
+DELETE   http://127.0.0.1:8000/api/recipes/2/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+
+{
+  "ingredients": [
+    {
+      "id": 3,
+      "amount": 20
+    }
+        
+  ]
+
+}
+###
+DELETE        http://127.0.0.1:8000/api/recipes/108/favorite/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+######
+GET       http://127.0.0.1:8000/api/recipes/108/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+###
+POST      http://127.0.0.1:8000/api/recipes/108/favorite/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+
+# {
+#   "ingredients": [
+#     {
+#       "id": 3,
+#       "amount": 10
+#     },
+#     {
+#       "id": 1,
+#       "amount": 15
+#     }    
+#   ],
+#   "tags": [
+#     2, 3
+#   ],
+#   "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+#   "name": "string22",
+#   "text": "string",
+#   "cooking_time": 1
+# }
+###
+POST       http://127.0.0.1:8000/api/recipes/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+
+{
+  "ingredients": [
+    {
+      "id": 3,
+      "amount": 10
+    },
+    {
+      "id": 1,
+      "amount": 20
+    }    
+  ],
+  "tags": [
+    2, 3
+  ],
+  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+  "name": "string29",
+  "text": "string",
+  "cooking_time": 1
+}
+###
+###
+GET  http://127.0.0.1:8000/api/recipes/110/
+###
+PATCH http://127.0.0.1:8000/api/recipes/102/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+# Authorization: Token 538e7dce8d69136abd91691fa4f591bc6bef6eb4
+
+{
+  "ingredients": [
+    {
+      "id": 2,
+      "amount": 12
+    }    
+  ],
+  "tags": [
+    1
+  ],
+  "cooking_time": 4
+
+}
+###
+PATCH http://127.0.0.1:8000/api/recipes/73/
+Content-Type: application/json
+Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+# Authorization: Token 538e7dce8d69136abd91691fa4f591bc6bef6eb4
+
+{
+
+  
+  
+  
+  "cooking_time": 2
+}
+###
+POST      http://127.0.0.1:8000/api/tags/
+Content-Type: application/json
+Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+
+
+  {
+    "id": 0,
+    "name": "Завтрак1",
+    "color": "#E26C2D",
+    "slug": "breakfast1"
+  }
+
+
+###
+POST http://127.0.0.1:8000/api/users/set_password/
+Content-Type: application/json
+Authorization: Token 538e7dce8d69136abd91691fa4f591bc6bef6eb4
+###
+POST   http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
 
 {
     "first_name": "Иван",
@@ -11,14 +199,27 @@ Content-Type: application/json
 }
 ###
 ###
-GET  http://127.0.0.1:8000/api/users/9/
+POST   http://127.0.0.1:8000/api/auth/token/login/
 Content-Type: application/json
-Authorization: Token c232953b091e6f0403ef427169ecbc5da025d5a7
+
+
+{
+    "first_name": "Иван",
+    "last_name": "Иванов",
+    "email": "fa@mail.ru",
+    "username": "test2.user",
+    "password": "Solnce544"
+}
 ###
 ###
 GET  http://127.0.0.1:8000/api/users/
 Content-Type: application/json
-Authorization: Token 0d33ffbceeb4d0465cc2dfc317e5bad3c0bd10ba
+
+###
+###
+DELETE   http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+Authorization: Token 1eaf500981caa90810df8dcb7c260d222e8407f2
 ######
 POST  http://127.0.0.1:8000/api/auth/token/logout/
 Content-Type: application/json
@@ -48,7 +249,7 @@ Content-Type: application/json
     "password": "Solnce544"
 }
 ###
-admin 0d33ffbceeb4d0465cc2dfc317e5bad3c0bd10ba
+admin 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
 ###
 POST  http://127.0.0.1:8000/api/users/set_password/
 Content-Type: application/json

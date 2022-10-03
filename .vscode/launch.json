@@ -19,6 +19,20 @@
             "justMyCode": true
         },
         {
+            "name": "Python: api_tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\backend\\manage.py",
+            "args": [
+                "test",
+                "api.tests",
+                "-v",
+                "2"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
             "name": "Python: Django",
             "type": "python",
             "request": "launch",

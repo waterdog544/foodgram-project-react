@@ -27,6 +27,12 @@ class Ingredient(models.Model):
         ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('name', 'measurement_unit'),
+                name='unique_name_measurement_unit'
+            ),
+        )
 
 
 class IngredientRecipe(models.Model):
@@ -39,17 +45,23 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         'Recipe',
         on_delete=models.CASCADE,
-        # related_name='ingredients',
+        related_name='ingredients',
         verbose_name='Рецепт'
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
         validators=(MinValueValidator(0.1),)
     )
-
+    
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецептах'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('ingredient', 'recipe'),
+                name='unique_ingredient_recipe'
+            ),
+        )
 
 
 class Recipe(models.Model):
@@ -78,17 +90,15 @@ class Recipe(models.Model):
         verbose_name='Время приготовления, мин.',
         validators=(MinValueValidator(1),),
     )
-    tags = models.ManyToManyField(
+    tags_th = models.ManyToManyField(
         'Tag',
         through='TagRecipe',
         verbose_name='Тэги',
-        blank=True,
     )
-    ingredients = models.ManyToManyField(
+    ingredients_th = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
         verbose_name='Ингредиенты',
-        blank=True,
     )
     favorite_by_users = models.ManyToManyField(
         User,
@@ -104,6 +114,12 @@ class Recipe(models.Model):
     @property
     def added_to_favorite(self):
         return self.favorite_by_users.count()
+    
+    def is_favorited(self, anyuser):
+        return self.favorite_by_users.filter(id=anyuser.id).exists()
+    
+    def is_in_shopping_cart(self, anyuser):
+        return self.shopping_cart_recipes.filter(id=anyuser.id).exists()
 
     def __str__(self):
         return self.name
@@ -112,6 +128,13 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=('author', 'name', ),
+                name='unique_author_name'
+            ),
+        )
+        
 
 
 class Tag(models.Model):
@@ -136,18 +159,19 @@ class Tag(models.Model):
         blank=True,
     )
 
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Список тэгов'
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
-                fields=['name', 'color', 'slug'],
-                name='unique_name_color_slug'
-            )
-        ]
+                fields=('name', 'slug'),
+                name='unique_name_slug'
+            ),
+        )
 
 
 class TagRecipe(models.Model):
@@ -159,6 +183,7 @@ class TagRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='tags',
         verbose_name='Рецепт'
     )
 
@@ -168,7 +193,12 @@ class TagRecipe(models.Model):
     class Meta:
         verbose_name = 'Тэг рецепта'
         verbose_name_plural = 'Тэги рецептов'
-
+        constraints = (
+            models.UniqueConstraint(
+                fields=('tag', 'recipe'),
+                name='unique_tag_recipe'
+            ),
+        )
 
 class ShoppingCartRecipe(models.Model):
     user = models.ForeignKey(
@@ -210,3 +240,9 @@ class UserFavoriteRecipe(models.Model):
     class Meta:
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избраннные рецепты'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='unique_user_recipe'
+            ),
+        )

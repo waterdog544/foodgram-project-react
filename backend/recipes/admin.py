@@ -130,11 +130,11 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
 
 
 class IngredientInline(admin.TabularInline):
-    model = Recipe.ingredients.through
+    model = Recipe.ingredients_th.through
 
 
 class TagInline(admin.TabularInline):
-    model = Recipe.tags.through
+    model = Recipe.tags_th.through
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -157,7 +157,9 @@ class RecipeAdmin(admin.ModelAdmin):
         'added_to_favorite'
     )
     readonly_fields = ('image_tag', 'added_to_favorite')
-    inlines = (IngredientInline, TagInline)
+    inlines = (
+        IngredientInline,
+        TagInline,)
     list_editable = (
         'author',
         'name',

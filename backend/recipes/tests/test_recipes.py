@@ -1,15 +1,21 @@
-from recipes.models import Recipe
+from recipes.models import Recipe, Ingredient, IngredientRecipe
 from users.models import User
 
 user = User.objects.all()
 lisa = user[0]
 test = user[1]
 recipe = Recipe.objects.all()
+
+
 recipe_j = recipe[1]
 recipe_i = recipe[0]
+ingredient = Ingredient.objects.all()[1]
+print('ingredient: ', ingredient)
+print('ingredient.ingredient_recipes: ', ingredient.ingredient_recipes.get(recipe=1).amount)
 # print('name lisa: ', lisa)
 # print('lisa.favorite_recipes:  ', lisa.favorite_recipes.all())
-# print('recipe: ', recipe)
+print('recipe_j.name.: ', recipe_i.name)
+print('recipe_j.tags_th.: ', recipe_i.tags_th.all())
 # print('recipe.favorite_by_users: ', recipe.favorite_by_users.all())
 # print('recipe.favorite_by_users.count: ', recipe.favorite_by_users.count())
 # print('recipe.tags: ', recipe.tags.all())

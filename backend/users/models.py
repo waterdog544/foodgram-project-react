@@ -39,11 +39,11 @@ class User(AbstractUser):
     def is_subscribed(self, anyuser):
         return self.subscribed.filter(id=anyuser.id).exists()
 
-    def is_favorited(self, anyrecipe):
-        return self.favorite_recipes.filter(id=anyrecipe.id).exists()
+    # def is_favorited(self, anyrecipe):
+    #     return self.favorite_recipes.filter(id=anyrecipe.id).exists()
     
-    def is_in_shopping_cart(self, anyrecipe):
-        return self.shopping_cart_recipes.filter(id=anyrecipe.id).exists()
+    # def is_in_shopping_cart(self, anyrecipe):
+    #     return self.shopping_cart_recipes.filter(id=anyrecipe.id).exists()
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -69,4 +69,10 @@ class Subscriptions(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('author', 'subscriber'),
+                name='unique_author_subscriber'
+            ),
+        )
     
