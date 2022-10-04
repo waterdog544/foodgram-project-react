@@ -1,30 +1,30 @@
 from django.contrib import admin
-from users.models import User, Subscriptions
+from users.models import User
 
 
 class UserAdmin(admin.ModelAdmin):
-    # list_display = (
-    #     'id',
+    list_display = (
+        'id',
     #     'email',
     #     'first_name',
     #     'last_name',
-    #     'username',
+        'username',
     #     'password',
-    # )
+    )
     list_filter = ('email', 'first_name')
-    # list_editable = (
+    list_editable = (
     #     'email',
     #     'first_name',
     #     'last_name',
-    #     'username',
+        'username',
     #     'password',
-    # )
+    )
     empty_value_display = '-пусто-'
 
 
-class SubscriptionsAdmin(admin.ModelAdmin):
-    empty_value_display = '-пусто-'
+# class SubscriptionsAdmin(admin.ModelAdmin):
+#     empty_value_display = '-пусто-'
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Subscriptions, SubscriptionsAdmin)
+# admin.site.register(Subscriptions, SubscriptionsAdmin)

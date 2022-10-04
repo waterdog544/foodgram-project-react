@@ -1,9 +1,11 @@
 
+from urllib import request
 from rest_framework import authentication, permissions
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
+from rest_framework.request import Request
 
 from rest_framework.response import Response
 from rest_framework import filters
@@ -16,6 +18,7 @@ from api.serializers import (
     RecipeSerializer,
     TagSerializer,
     FavoriteSerializer,
+    SubscriptionsSerializer
     
 )
 from api.filters import (
@@ -26,6 +29,7 @@ from api.filters import (
 from rest_framework import mixins
 
 
+from users.models import User
 from recipes.models import (
     Ingredient,
     Recipe, Tag,
@@ -35,7 +39,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.serializers import ValidationError
 from djoser.views import UserViewSet
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny, IsAuthenticated
 )
@@ -44,24 +48,88 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
 
-# class CustomUserViewSet(UserViewSet):
-#     pagination_class = PageNumberPagination
+class SubscriptionsViewSet(viewsets.ModelViewSet):
+    serializer_class = SubscriptionsSerializer
+    permission_classes = (IsAuthenticated,)
+   
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(
+                page,
+                many=True,
+                context={'request': self.request}
+            )
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(
+            queryset,
+            many=True,
+            context={'request': self.request}
+        )
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.subscribers.all()
 
 
-# from backend.api.serializers import CustomUserSerializer, UserSerializer
-# from backend.users import User
+@api_view(['POST', 'DELETE'])
+def subscribe_set(request, user_id):
+    try:
+        author = get_object_or_404(User, pk=user_id)
+    except Exception as e:
+        error = {'errors': f'{e} Автора c id = {user_id} нет в базе.'}
+        raise ValidationError(error)
+    user = request.user
+    if request.method == 'POST':
+        if author.subscribers.filter(id=user.id).exists():
+            error = {'errors': (
+                f'Пользователь "{user}" уже подписан на'
+                f' автора {author.username}.'
+            )}            
+            raise ValidationError(error)
+        author.subscribers.add(user)
+        author.save()
+        serializer = SubscriptionsSerializer(
+            author,
+            context={'request': request}
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    if not user.is_subscribed(author):
+        error = {'errors': (
+            f'Пользователь {user} не подписан на автора c id = {user_id}.'
+            f' {user} в избранные'
+        )}
+        raise ValidationError(error)
+    author.subscribers.remove(user)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
+@api_view(['POST', 'DELETE'])
+def favorite_set(request, recipe_id):
+    try:
+        recipe = get_object_or_404(Recipe, pk=recipe_id)
+    except Exception as e:
+        error = {'errors': f'{e} Рецепта c id = {recipe_id} нет в базе.'}
+        raise ValidationError(error)
+    user = request.user
+    if request.method == 'POST':
+        recipe.favorite_by_users.add(user)
+        serializer = FavoriteSerializer(recipe, )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    try:
+        get_object_or_404(UserFavoriteRecipe, user=user, recipe=recipe)
+    except Exception:
+        error = {'errors': (
+            f'Рецепт c id = {recipe_id} не добавлен пользователем'
+            f' {user} в избранные'
+        )}
+        raise ValidationError(error)
+    recipe.favorite_by_users.remove(user)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
-#     def get_serializer_class(self):
-#         if self.action == 'list':
-#             return UserListSerializer
-#         return UserSerializer
 
-# class CustomUserViewSet(UserViewSet):
-#     queryset = User.objects.all()
 class IngredientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -116,131 +184,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
         return request
 
 
-class FavoriteViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.select_related('favorite_by_users').all()
-    serializer_class = FavoriteSerializer
-    permission_classes = (IsAuthenticated,)
 
-    def create(self, request, *args, **kwargs):
-        request.data['recipe'] = self.kwargs.get('recipe_id')
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)        
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
-    
-
-    # def destroy(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     user = self.request.user
-    #     raise ValueError(instance, user)
-    #     self.perform_destroy(instance)
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-
-    # def perform_destroy(self, instance):
-    #     instance.delete()
-
-# class FavoriteCreateAPIView(generics.DestroyAPIView, generics.CreateAPIView):
-#     queryset = Recipe.objects.select_related('favorite_by_users').all()
-#     serializer_class = FavoriteSerializer
-#     permission_classes = (IsAuthenticated,)
-
-#     def destroy(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         user = self.request.user
-#         raise ValueError(instance, user)
-#         self.perform_destroy(instance)
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-#     def perform_destroy(self, instance):
-#         instance.delete()
-
-
-# class FavoriteDestroyAPIView(generics.DestroyAPIView):
-#     queryset = Recipe.objects.select_related('favorite_by_users').all()
-#     serializer_class = FavoriteSerializer
-#     permission_classes = (IsAuthenticated,)
-    
-#     def destroy(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         user = self.request.user
-#         raise ValueError(instance, user)
-#         self.perform_destroy(instance)
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-#     def perform_destroy(self, instance):
-#         instance.delete()
-
-# class FavoriteCreateAPIView(APIView):
-#     authentication_classes = (authentication.TokenAuthentication,)
-#     permission_classes = (IsAuthenticated,)
-#     # @csrf_exempt
-#     # @api_view(http_method_names=['POST'])
-#     # @csrf_protect
-#     # @csrf_exempt
-#     # @api_view(http_method_names=['POST'])
-#     def post(self, request,):
-#         # raise ValueError(request, )
-#         try:
-#             recipe = get_object_or_404(Recipe, pk=self.kwargs.get('recipe_id'))
-#         except Exception:
-#             raise ValidationError (f'Exception')
-#         # Recipe.objects.get(pk=self.kwargs.get('recipe_id'))
-#         user = self.request.user
-#         # raise ValueError(user, user.id)
-#         serializer = FavoriteSerializer(data={'favorite_by_users': user.id})
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def get_serializer(self, *args, **kwargs):
-#         """
-#         Return the serializer instance that should be used for validating and
-#         deserializing input, and for serializing output.
-#         """
-#         serializer_class = self.get_serializer_class()
-#         kwargs['context'] = self.get_serializer_context()
-#         return serializer_class(*args, **kwargs)
-
-#     def dispatch(self, request, *args, **kwargs):
-#         """
-#         `.dispatch()` is pretty much the same as Django's regular dispatch,
-#         but with extra hooks for startup, finalize, and exception handling.
-#         """
-#         self.args = args
-#         self.kwargs = kwargs
-#         request = self.initialize_request(request, *args, **kwargs)
-#         self.request = request
-#         self.headers = self.default_response_headers  # deprecate?
-
-#         # try:
-#         #     self.initial(request, *args, **kwargs)
-
-#         #     # Get the appropriate handler method
-#         #     if request.method.lower() in self.http_method_names:
-#         #         handler = getattr(self, request.method.lower(),
-#         #                           self.http_method_not_allowed)
-#         #     else:
-#         #         handler = self.http_method_not_allowed
-
-#         #     response = handler(request, *args, **kwargs)
-
-#         # except Exception as exc:
-#         #     response = self.handle_exception(exc)
-#         self.initial(request, *args, **kwargs)
-#         handler = getattr(self, request.method.lower())
-#         response = handler(request, *args)
-
-#         self.response = self.finalize_response(request, response, *args, **kwargs)
-#         return self.response
-
-        
-#     #     recipe.favorite_by_users.add(user)
-#     # def Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

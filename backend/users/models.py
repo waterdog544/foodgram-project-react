@@ -26,18 +26,29 @@ class User(AbstractUser):
         through='recipes.UserFavoriteRecipe',
         blank=True,
         verbose_name='Избранные рецепты'
+        
     )
-    subscribed = models.ManyToManyField(
+    # subscribed = models.ForeignKey(
+    #     'self',
+    #     blank=True,
+    #     related_name = 'subscribers'
+    # )
+    subscribers = models.ManyToManyField(
         'self',
-        through='Subscriptions',
         blank=True,
+        related_name='subscribed',
+        verbose_name='Подписки на авторов'
     )
 
     def __str__(self):
         return self.username
 
     def is_subscribed(self, anyuser):
-        return self.subscribed.filter(id=anyuser.id).exists()
+        return self.subscribers.filter(id=anyuser.id).exists()
+    
+    @property
+    def recipes_count(self):
+        return self.recipes.count()
 
     # def is_favorited(self, anyrecipe):
     #     return self.favorite_recipes.filter(id=anyrecipe.id).exists()
@@ -50,29 +61,29 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
 
-class Subscriptions(models.Model):
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name='Автор'
-    )
-    subscriber = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='subcribers',
-        verbose_name='Подписчик'
-    )
+# class Subscriptions(models.Model):
+#     author = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         verbose_name='Автор'
+#     )
+#     subscriber = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         # related_name='subscribers',
+#         verbose_name='Подписчик'
+#     )
 
-    def __str__(self):
-        return f'{self.subscriber} на {self.author} '
+    # def __str__(self):
+    #     return f'{self.subscriber} на {self.author} '
 
-    class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('author', 'subscriber'),
-                name='unique_author_subscriber'
-            ),
-        )
+    # class Meta:
+    #     verbose_name = 'Подписка'
+    #     verbose_name_plural = 'Подписки'
+    #     constraints = (
+    #         models.UniqueConstraint(
+    #             fields=('author', 'subscriber'),
+    #             name='unique_author_subscriber'
+    #         ),
+    #     )
     

@@ -1,5 +1,5 @@
 import base64
-
+from urllib import request
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe, UserFavoriteRecipe
@@ -7,6 +7,7 @@ from rest_framework import serializers
 from users.models import User
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.serializers import ValidationError
+from api.pagination import RecipesLimitPagination
 
 # from django.shortcuts import get_object_or_404
 # from rest_framework.decorators import action
@@ -119,11 +120,13 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         model = User
         fields = (
             'email',
+            'id',
             'username',
             'first_name',
             'last_name',
             'password'
         )
+        read_only_fields = ('id',)
 
 
 class CustomUserSerializer(UserSerializer):
@@ -246,19 +249,49 @@ class FavoriteSerializer(RecipeSerializer):
 
     class Meta:
         model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time', 'favorite_by_users')
+        read_only_fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class SubscriptionsSerializer(CustomUserSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
         fields = (
-            'id', 'name', 'image', 'cooking_time', 'favorite_by_users'
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count'
         )
         read_only_fields = (
-            'id', 'name', 'image', 'cooking_time'
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count'
         )
-        validators = []
-        write_only_fields = ('favorite_by_users',)
     
-    def create(self, validated_data):
-        # raise ValueError(validated_data, self)
-        recipe = Recipe.objects.get(
-            pk=self.context['view'].kwargs.get('recipe_id')
-        )
-        recipe.favorite_by_users.add(validated_data['favorite_by_users'])
-        return recipe
+    def get_recipes_count(self, author):
+        return author.recipes_count
+    
+    def get_recipes(self, author):
+        request = self.context.get('request')
+        recipes_limit = request.GET.get('recipes_limit')
+        if recipes_limit:
+            queryset = author.recipes.all()[:int(recipes_limit)]
+            return FavoriteSerializer(queryset, many=True).data
+        queryset = author.recipes.all()
+        return FavoriteSerializer(queryset, many=True).data
+        
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        return obj.is_subscribed(request.user)

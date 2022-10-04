@@ -2,9 +2,21 @@ from recipes.models import Recipe, Ingredient, IngredientRecipe
 from users.models import User
 
 user = User.objects.all()
-lisa = user[0]
-test = user[1]
+lisa = User.objects.get(username='lisa')
+test = User.objects.get(username='test.user')
 recipe = Recipe.objects.all()
+user3 = User.objects.get(username='test3.user')
+print('user3:', user3)
+try:
+    a = user3.subscribers.add(test)
+except Exception:
+    raise ValueError(Exception)
+user3.save()
+print('user3.subscribed.all():', user3.subscribers.all())
+# print('user3.subscribed:', user3.subscribed)
+# print('user3.subcribers:', user3.subcribers)
+print(' test2.user subscribed', test.subscribers.all())
+print('lisa.is_subscribed(test2):', lisa.is_subscribed(test))
 
 
 recipe_j = recipe[1]

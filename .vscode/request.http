@@ -25,7 +25,7 @@ Content-Type: application/json
 ###
 POST      http://127.0.0.1:8000/api/ingredients/
 Content-Type: application/json
-Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+Authorization: Token 57e62b17670b781b2436e80950ac9e08150d0ad5
 
 
   {
@@ -37,7 +37,7 @@ Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
 ###
 POST      http://127.0.0.1:8000/api/tags/
 Content-Type: application/json
-Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+Authorization: Token 57e62b17670b781b2436e80950ac9e08150d0ad5
 
 
   {
@@ -51,7 +51,7 @@ Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
 ###
 POST        http://127.0.0.1:8000/api/tags/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 
 {
   
@@ -64,7 +64,7 @@ Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 ###
 DELETE   http://127.0.0.1:8000/api/recipes/2/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 
 {
   "ingredients": [
@@ -77,17 +77,44 @@ Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 
 }
 ###
-DELETE        http://127.0.0.1:8000/api/recipes/108/favorite/
-Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
-######
-GET       http://127.0.0.1:8000/api/recipes/108/
-Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 ###
-POST      http://127.0.0.1:8000/api/recipes/108/favorite/
+GET       http://127.0.0.1:8000/api/users/me/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+GET       http://127.0.0.1:8000/api/users/subsciptions/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+
+###
+GET       http://127.0.0.1:8000/api/users/me/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+POST      http://127.0.0.1:8000/api/users/1/subscribe/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+DELETE       http://127.0.0.1:8000/api/users/1/subscribe/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+
+
+DELETE        http://127.0.0.1:8000/api/recipes/1/favorite/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+######
+GET       http://127.0.0.1:8000/api/recipes/2/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+POST      http://127.0.0.1:8000/api/recipes/2/favorite/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 
 # {
 #   "ingredients": [
@@ -111,7 +138,7 @@ Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 ###
 POST       http://127.0.0.1:8000/api/recipes/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 
 {
   "ingredients": [
@@ -138,7 +165,7 @@ GET  http://127.0.0.1:8000/api/recipes/110/
 ###
 PATCH http://127.0.0.1:8000/api/recipes/102/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 # Authorization: Token 538e7dce8d69136abd91691fa4f591bc6bef6eb4
 
 {
@@ -157,7 +184,7 @@ Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 ###
 PATCH http://127.0.0.1:8000/api/recipes/73/
 Content-Type: application/json
-Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 # Authorization: Token 538e7dce8d69136abd91691fa4f591bc6bef6eb4
 
 {
@@ -170,14 +197,14 @@ Authorization: Token 07d9855c9a4d8e21df29426ec9a3b8e06941813b
 ###
 POST      http://127.0.0.1:8000/api/tags/
 Content-Type: application/json
-Authorization: Token 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+Authorization: Token 57e62b17670b781b2436e80950ac9e08150d0ad5
 
 
   {
     "id": 0,
-    "name": "Завтрак1",
+    "name": "Ужин",
     "color": "#E26C2D",
-    "slug": "breakfast1"
+    "slug": "Supper"
   }
 
 
@@ -193,8 +220,8 @@ Content-Type: application/json
 {
     "first_name": "Иван",
     "last_name": "Иванов",
-    "email": "test2@mail.ru",
-    "username": "test2.user",
+    "email": "test3@mail.ru",
+    "username": "test3.user",
     "password": "Solnce544"
 }
 ###
@@ -206,8 +233,8 @@ Content-Type: application/json
 {
     "first_name": "Иван",
     "last_name": "Иванов",
-    "email": "fa@mail.ru",
-    "username": "test2.user",
+    "email": "fk@mail.ru",
+    "username": "test.user",
     "password": "Solnce544"
 }
 ###
@@ -249,7 +276,7 @@ Content-Type: application/json
     "password": "Solnce544"
 }
 ###
-admin 85b6f01983661a8e4105ce45e8f2e5c3ff58526a
+admin 57e62b17670b781b2436e80950ac9e08150d0ad5
 ###
 POST  http://127.0.0.1:8000/api/users/set_password/
 Content-Type: application/json
