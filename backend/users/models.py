@@ -50,12 +50,6 @@ class User(AbstractUser):
     def recipes_count(self):
         return self.recipes.count()
 
-    # def is_favorited(self, anyrecipe):
-    #     return self.favorite_recipes.filter(id=anyrecipe.id).exists()
-    
-    # def is_in_shopping_cart(self, anyrecipe):
-    #     return self.shopping_cart_recipes.filter(id=anyrecipe.id).exists()
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
