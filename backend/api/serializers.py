@@ -1,16 +1,12 @@
 import base64
-from urllib import request
+
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from recipes.models import (
-    Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe, UserFavoriteRecipe,
-    ShoppingCartRecipe
-)
 from rest_framework import serializers
-from users.models import User
 from rest_framework.validators import UniqueTogetherValidator
-from rest_framework.serializers import ValidationError
-from api.pagination import RecipesLimitPagination
+
+from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe
+from users.models import User
 
 
 class Base64ImageField(serializers.ImageField):
@@ -23,7 +19,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Ingredient
         fields = (
@@ -59,7 +55,7 @@ class TagSerializer(serializers.ModelSerializer):
                 )
             ),
         )
-        
+
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     id = serializers.SlugRelatedField(
@@ -72,7 +68,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
     )
     measurement_unit = serializers.SlugRelatedField(
         slug_field='measurement_unit', source='ingredient', read_only=True
-    )    
+    )
 
     class Meta:
         model = IngredientRecipe
@@ -270,10 +266,10 @@ class SubscriptionsSerializer(CustomUserSerializer):
             'recipes',
             'recipes_count'
         )
-    
+
     def get_recipes_count(self, author):
         return author.recipes_count
-    
+
     def get_recipes(self, author):
         request = self.context.get('request')
         recipes_limit = request.GET.get('recipes_limit')
@@ -282,7 +278,7 @@ class SubscriptionsSerializer(CustomUserSerializer):
             return FavoriteSerializer(queryset, many=True).data
         queryset = author.recipes.all()
         return FavoriteSerializer(queryset, many=True).data
-        
+
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         return obj.is_subscribed(request.user)
@@ -300,8 +296,8 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'name',
             'measurement_unit',
-            'amount') 
-        
+            'amount')
+
     def get_name(self,):
         raise ValueError(self)
         pass
@@ -312,4 +308,3 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
     def amount(self):
         raise ValueError(self)
         pass
-        

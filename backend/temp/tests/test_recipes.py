@@ -1,9 +1,9 @@
-from recipes.models import Recipe, Ingredient, IngredientRecipe
-from users.models import User
+import json
+
 from django.db.models import Avg, Max, Min, Sum
 
-import json
-from recipes.models import Ingredient
+from recipes.models import Ingredient, IngredientRecipe, Recipe
+from users.models import User
 
 # with open('d:/dev/foodgram-project-react/.vscode/ingredients.json', encoding='utf-8') as f:
 #     data = json.load(f)

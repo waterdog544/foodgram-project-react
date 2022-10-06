@@ -1,11 +1,13 @@
-import pytest
-from django.test import TestCase
-from users.models import User
-from rest_framework.test import APIClient, override_settings
-from rest_framework.authtoken.models import Token
-from django.conf import settings
 import shutil
 import tempfile
+
+import pytest
+from django.conf import settings
+from django.test import TestCase
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient, override_settings
+
+from users.models import User
 
 from .common import auth_client, create_users_api
 

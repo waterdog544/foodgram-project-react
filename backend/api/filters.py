@@ -1,7 +1,8 @@
 import django_filters
+from rest_framework.serializers import ValidationError
+
 from recipes.models import Recipe
 from users.models import User
-from rest_framework.serializers import ValidationError
 
 
 class RecipeFilter(django_filters.FilterSet):
@@ -10,7 +11,7 @@ class RecipeFilter(django_filters.FilterSet):
     class Meta:
         model = Recipe
         fields = ('tags',)
-    
+
     @property
     def qs(self):
         parent = super().qs
@@ -20,7 +21,7 @@ class RecipeFilter(django_filters.FilterSet):
         if is_favorited and is_in_shopping_cart:
             return parent.filter(
                 favorite_by_users=user
-            ).filter(shopping_cart_recipes__user=user)        
+            ).filter(shopping_cart_recipes__user=user)
         elif is_favorited:
             return parent.filter(favorite_by_users=user)
         elif is_in_shopping_cart:
@@ -42,9 +43,12 @@ class RecipeFilter(django_filters.FilterSet):
         if obj_int in (0, 1):
             return obj_int
         elif obj:
-            mess = {'errors': f'Value Error. Значение параметра {name} = {obj}, должно быть: (0, 1).'}
+            mess = {'errors': (
+                f'Value Error. Значение параметра {name} = {obj},'
+                f' должно быть: (0, 1).'
+            )}
             raise ValidationError(mess)
-
+        return None
 
 
 class SubsciptionsFilter(django_filters.FilterSet):
@@ -52,7 +56,7 @@ class SubsciptionsFilter(django_filters.FilterSet):
     class Meta:
         model = User
         fields = []
-    
+
     @property
     def qs(self):
         parent = super().qs
@@ -62,7 +66,7 @@ class SubsciptionsFilter(django_filters.FilterSet):
                 recipes__tags_th__slug=tags
             ).order_by('-recipes__pub_date').distinct()
         return parent.order_by('-recipes__pub_date').distinct()
-        
+
         # for postgres
         # if tags:
         #     return parent.filter(
@@ -73,5 +77,3 @@ class SubsciptionsFilter(django_filters.FilterSet):
         # return parent.order_by(
         #     'recipes__pub_date'
         #     ).distinct('recipes__pub_date')
-
-

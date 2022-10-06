@@ -1,7 +1,8 @@
-from users.models import User
-from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+
 from api.tests.fixtures.fixture_user import admin_client
+from users.models import User
 
 
 def create_users_api(admin_client):

@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
-from django.utils.html import format_html
 from django.db import models
+from django.utils.html import format_html
+
 from users.models import User
 
 
@@ -52,7 +53,7 @@ class IngredientRecipe(models.Model):
         verbose_name='Количество',
         validators=(MinValueValidator(0.1),)
     )
-    
+
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецептах'
@@ -114,10 +115,10 @@ class Recipe(models.Model):
     @property
     def added_to_favorite(self):
         return self.favorite_by_users.count()
-    
+
     def is_favorited(self, anyuser):
         return self.favorite_by_users.filter(id=anyuser.id).exists()
-    
+
     def is_in_shopping_cart(self, anyuser):
         return self.shopping_cart_recipes.filter(user=anyuser.id).exists()
 
@@ -134,7 +135,6 @@ class Recipe(models.Model):
                 name='unique_author_name'
             ),
         )
-        
 
 
 class Tag(models.Model):
@@ -158,7 +158,6 @@ class Tag(models.Model):
         verbose_name='Рецепты',
         blank=True,
     )
-
 
     def __str__(self):
         return self.name
@@ -199,6 +198,7 @@ class TagRecipe(models.Model):
                 name='unique_tag_recipe'
             ),
         )
+
 
 class ShoppingCartRecipe(models.Model):
     user = models.ForeignKey(

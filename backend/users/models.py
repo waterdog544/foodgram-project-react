@@ -26,7 +26,7 @@ class User(AbstractUser):
         through='recipes.UserFavoriteRecipe',
         blank=True,
         verbose_name='Избранные рецепты'
-        
+
     )
     subscribers = models.ManyToManyField(
         'self',
@@ -40,7 +40,7 @@ class User(AbstractUser):
 
     def is_subscribed(self, anyuser):
         return self.subscribers.filter(id=anyuser.id).exists()
-    
+
     @property
     def recipes_count(self):
         return self.recipes.count()

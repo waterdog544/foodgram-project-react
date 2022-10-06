@@ -1,25 +1,21 @@
-from asyncore import write
-from wsgiref.validate import validator
-from rest_framework.serializers import ValidationError
 # import webcolors
 import base64
+from asyncore import write
+from wsgiref.validate import validator
+
 from django.core.files.base import ContentFile
+from django.shortcuts import get_object_or_404
 # import re
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.serializers import ValidationError
+
+from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe
+from users.models import User
+
 # from importlib.metadata import files
 
-from recipes.models import (
-    Ingredient,
-    IngredientRecipe,
-    Recipe,
-    Tag,
-    TagRecipe
-)
-from rest_framework import serializers
-from users.models import User
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
 
 
 class Base64ImageField(serializers.ImageField):

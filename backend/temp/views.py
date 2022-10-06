@@ -1,29 +1,19 @@
-from rest_framework.response import Response
-from rest_framework import status
 from functools import partial
-from api.serializers import (
-    IngredientSerializer,
-    # RecipeReadSerializer,
-    RecipeSerializer,
-    RecipeNewSerializer,
-    RecipeNew1Serializer,
-    TagSerializer,
-)
 
-from recipes.models import (
-    Ingredient,
-    Recipe, Tag,
-)
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.serializers import ValidationError
 from djoser.views import UserViewSet
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
-)
-from api.permissions import IsAuthorOrAdminOrReadOnly, IsAdminOrReadOnly
+from rest_framework.permissions import (AllowAny, IsAdminUser,
+                                        IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
+from api.permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
+from api.serializers import IngredientSerializer  # RecipeReadSerializer,
+from api.serializers import (RecipeNew1Serializer, RecipeNewSerializer,
+                             RecipeSerializer, TagSerializer)
+from recipes.models import Ingredient, Recipe, Tag
 
 # class CustomUserViewSet(UserViewSet):
 #     pagination_class = PageNumberPagination
