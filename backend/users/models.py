@@ -28,11 +28,6 @@ class User(AbstractUser):
         verbose_name='Избранные рецепты'
         
     )
-    # subscribed = models.ForeignKey(
-    #     'self',
-    #     blank=True,
-    #     related_name = 'subscribers'
-    # )
     subscribers = models.ManyToManyField(
         'self',
         blank=True,
@@ -53,31 +48,3 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-
-# class Subscriptions(models.Model):
-#     author = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         verbose_name='Автор'
-#     )
-#     subscriber = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         # related_name='subscribers',
-#         verbose_name='Подписчик'
-#     )
-
-    # def __str__(self):
-    #     return f'{self.subscriber} на {self.author} '
-
-    # class Meta:
-    #     verbose_name = 'Подписка'
-    #     verbose_name_plural = 'Подписки'
-    #     constraints = (
-    #         models.UniqueConstraint(
-    #             fields=('author', 'subscriber'),
-    #             name='unique_author_subscriber'
-    #         ),
-    #     )
-    

@@ -2,15 +2,15 @@ import base64
 from urllib import request
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe, UserFavoriteRecipe
+from recipes.models import (
+    Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe, UserFavoriteRecipe,
+    ShoppingCartRecipe
+)
 from rest_framework import serializers
 from users.models import User
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.serializers import ValidationError
 from api.pagination import RecipesLimitPagination
-
-# from django.shortcuts import get_object_or_404
-# from rest_framework.decorators import action
 
 
 class Base64ImageField(serializers.ImageField):
@@ -20,15 +20,6 @@ class Base64ImageField(serializers.ImageField):
             ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         return super().to_internal_value(data)
-    
-    # def to_representation(self, data):
-    #     raise ValueError (data)
-    #     try:
-    #         with open(data, 'rb') as f:
-    #         #Call decode to return string and not bytes
-    #             return base64.b64encode(f.read()).decode()
-    #     except StandardError:
-    #         return "R0lGODlhAQABAAAAACwAAAAAAQABAAA="
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -295,3 +286,30 @@ class SubscriptionsSerializer(CustomUserSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         return obj.is_subscribed(request.user)
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'name',
+            'measurement_unit',
+            'amount'
+        )
+        read_only_fields = (
+            'name',
+            'measurement_unit',
+            'amount') 
+        
+    def get_name(self,):
+        raise ValueError(self)
+        pass
+
+    def get_measurement_unit(self):
+        pass
+
+    def amount(self):
+        raise ValueError(self)
+        pass
+        

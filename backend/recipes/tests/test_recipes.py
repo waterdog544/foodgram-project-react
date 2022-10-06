@@ -1,9 +1,24 @@
 from recipes.models import Recipe, Ingredient, IngredientRecipe
 from users.models import User
+from django.db.models import Avg, Max, Min, Sum
 
+import json
+from recipes.models import Ingredient
+
+# with open('d:/dev/foodgram-project-react/.vscode/ingredients.json', encoding='utf-8') as f:
+#     data = json.load(f)
+# for i in data:
+#     Ingredient.objects.create(name=i['name'], measurement_unit=i['measurement_unit'])
+
+test = User.objects.get(username='test.user')
+ingredients_val = Ingredient.objects.prefetch_related('ingredient_recipes__recipe__shopping_cart_recipes__user').all().filter(ingredient_recipes__recipe__shopping_cart_recipes__user=test).annotate(sum_amount=Sum('ingredient_recipes__amount')).values('name', 'measurement_unit', 'sum_amount')
+shopping_list = 'Список продуктов:\n\n'
+for i in ingredients_val:
+    shopping_list = shopping_list +chr(176) +' ' + i['name'] + ' (' + i['measurement_unit'] + ') - ' + str(i['sum_amount']) + '\n'
+print(shopping_list)
 user = User.objects.all()
 lisa = User.objects.get(username='lisa')
-test = User.objects.get(username='test.user')
+
 recipe = Recipe.objects.all()
 user3 = User.objects.get(username='test3.user')
 print('user3:', user3)
@@ -12,11 +27,27 @@ try:
 except Exception:
     raise ValueError(Exception)
 user3.save()
-print('user3.subscribed.all():', user3.subscribers.all())
+# print('user3.subscribed.all():', user3.subscribers.all())
 # print('user3.subscribed:', user3.subscribed)
 # print('user3.subcribers:', user3.subcribers)
-print(' test2.user subscribed', test.subscribers.all())
+print(' test.subscribers.all()', test.subscribers.all())
+print(' test.subscribers.all()', test.subscribers.all().order_by('recipes__pub_date').distinct())
+print(' recipes__tags_th__slug="breakfast"', test.subscribers.filter(recipes__tags_th__slug = 'Supper').distinct())
+# print(' recipes__tag_th__slug="breakfast"', test.subscribers.filter(recipes=2))
+recipes = test.shopping_cart_recipes.all()
+# select_related(
+#             'shopping_cart_recipes__recipes__ingreditnts',
+#             'shopping_cart_recipes__recipes__ingreditnts__ingredient',
+#         )
+ingr = recipes.annotate(ingred_sum = Sum('recipe__ingredients__amount'))
+print('recipes', recipes)
+print('ingr',ingr)
+print('ingr[1].ingred_sum',ingr[1].ingred_sum)
+print('ingr[1]',ingr[1].recipe)
+print('ingr[2].ingred_sum',ingr[2].ingred_sum)
+print('ingr[2]',ingr[2].recipe)
 print('lisa.is_subscribed(test2):', lisa.is_subscribed(test))
+
 
 
 recipe_j = recipe[1]

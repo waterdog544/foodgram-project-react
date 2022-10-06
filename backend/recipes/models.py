@@ -119,7 +119,7 @@ class Recipe(models.Model):
         return self.favorite_by_users.filter(id=anyuser.id).exists()
     
     def is_in_shopping_cart(self, anyuser):
-        return self.shopping_cart_recipes.filter(id=anyuser.id).exists()
+        return self.shopping_cart_recipes.filter(user=anyuser.id).exists()
 
     def __str__(self):
         return self.name

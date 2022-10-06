@@ -107,6 +107,7 @@ class IngredientAdmin(admin.ModelAdmin):
     )
     list_filter = ('name',)
     empty_value_display = '-пусто-'
+    search_fields = ('name',)
 
 
 class IngredientRecipeAdmin(admin.ModelAdmin):

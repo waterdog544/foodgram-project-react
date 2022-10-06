@@ -140,3 +140,230 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return serializer
+		
+		"<rest_framework.request.Request: DELETE '/api/recipes/110/favorite/'>"
+		
+	class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.select_related('favorite_by_users').all()
+    serializer_class = FavoriteSerializer
+    permission_classes = (IsAuthenticated,)
+    http_method_names = ('post', 'delete')
+
+    def create(self, request, *args, **kwargs):
+        # raise ValidationError (self.request)
+        request.data['recipe'] = self.kwargs.get('recipe_id')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)        
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+    
+    # def dispatch(self, request, *args, **kwargs):
+    #     """
+    #     `.dispatch()` is pretty much the same as Django's regular dispatch,
+    #     but with extra hooks for startup, finalize, and exception handling.
+    #     """
+    #     self.args = args
+    #     self.kwargs = kwargs
+    #     request = self.initialize_request(request, *args, **kwargs)
+    #     self.request = request
+    #     self.headers = self.default_response_headers  # deprecate?
+
+        # try:
+        #     self.initial(request, *args, **kwargs)
+
+        #     # Get the appropriate handler method
+        #     if request.method.lower() in self.http_method_names:
+        handler = getattr(self, request.method.lower(),
+                                  self.http_method_not_allowed)
+        #     else:
+        #         handler = self.http_method_not_allowed
+
+        #     response = handler(request, *args, **kwargs)
+
+        # except Exception as exc:
+        # if request.method.lower() in self.http_method_names:
+        #     response = handler(request, *args, **kwargs)
+        #     response = self.handle_exception(exc)
+        # self.initial(request, *args, **kwargs)
+        # handler = getattr(self, request.method.lower())
+        # response = handler(request, *args)
+
+        # self.response = self.finalize_response(request, response, *args, **kwargs)
+        # return self.response
+
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     # Try to dispatch to the right method; if a method doesn't exist,
+    #     # defer to the error handler. Also defer to the error handler if the
+    #     # request method isn't on the approved list.
+    #     # if request.method.lower() in self.http_method_names:
+    #     handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+    #     # else:
+    #     #     handler = self.http_method_not_allowed
+    #     return handler(request, *args, **kwargs)
+
+    # def http_method_not_allowed(self, request, *args, **kwargs):
+    #     logger.warning(
+    #         'Method Not Allowed (%s): %s', request.method, request.path,
+    #         extra={'status_code': 405, 'request': request}
+    #     )
+    #     return HttpResponseNotAllowed(self._allowed_methods())
+
+    # @action(detail=True, methods=('post',))
+    # def dispatch(self, request, *args, **kwargs):
+    #     raise ValueError 
+    #     return super().dispatch(request, *args)
+    #    @action(detail=True, methods=('post',))
+    # @action(detail=False, methods=('delete',))
+    # @api_view
+    # @csrf_exempt
+
+    # def initial(self, request, *args, **kwargs):
+    #     if request.method.lower()=='delete':
+    #     #     raise ValidationError(f"Req {request} kwargs {self.kwargs}")
+    #         self.kwargs = self.get_parser_context(request).get('kwargs')
+    #     return super().initial(request, *args, **kwargs)
+    # # def initial(self, request, *args, **kwargs):
+    # #     # if request.method.lower()=='delete':
+    # #     #     raise ValidationError(f"Req {request} kwargs {self.kwargs}")
+    # #     #     self.kwargs = self.get_parser_context(request).get('kwargs')
+    # #     raise ValidationError(f"{self.get_parser_context(request).get('kwargs')}")
+    #     # raise ValueError(request)
+
+    #     # return super().initial(request, *args, **kwargs)
+    
+    def initialize_request(self, request, *args, **kwargs):
+        # raise ValidationError(f"TEST {request}")
+        if request.method.lower() ==' delete':
+            self.kwargs = self.get_parser_context(request).get('kwargs')
+            raise ValidationError(f"TEST {request}")
+            return super().initialize_request(request, *args, self.kwargs)
+        return super().initialize_request(request, *args, **kwargs)
+        # raise ValidationError(f"TEST {request}")
+        parser_context = self.get_parser_context(request)
+        return Request(
+            request,
+            parsers=self.get_parsers(),
+            authenticators=self.get_authenticators(),
+            negotiator=self.get_content_negotiator(),
+            parser_context=parser_context
+        )
+
+    
+    def destroy(self, request, *args, **kwargs):
+        # raise ValueError(kwargs.get('recipe_id'))
+        # instance = self.get_object()
+        instance = Recipe.objects.get(pk=kwargs.get('recipe_id'))
+        user = self.request.user
+        # raise ValueError(instance, user)
+        instance.favorite_by_users.remove(user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+    # def perform_destroy(self, instance):
+        instance.delete()
+
+class FavoriteCreateAPIView(generics.DestroyAPIView, generics.CreateAPIView):
+    queryset = Recipe.objects.select_related('favorite_by_users').all()
+    serializer_class = FavoriteSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = self.request.user
+        raise ValueError(instance, user)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+
+class FavoriteDestroyAPIView(generics.DestroyAPIView):
+    queryset = Recipe.objects.select_related('favorite_by_users').all()
+    serializer_class = FavoriteSerializer
+    permission_classes = (IsAuthenticated,)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = self.request.user
+        raise ValueError(instance, user)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+class FavoriteCreateAPIView(APIView):
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    # @csrf_exempt
+    # @api_view(http_method_names=['POST'])
+    # @csrf_protect
+    # @csrf_exempt
+    # @api_view(http_method_names=['POST'])
+    def post(self, request,):
+        # raise ValueError(request, )
+        try:
+            recipe = get_object_or_404(Recipe, pk=self.kwargs.get('recipe_id'))
+        except Exception:
+            raise ValidationError (f'Exception')
+        # Recipe.objects.get(pk=self.kwargs.get('recipe_id'))
+        user = self.request.user
+        # raise ValueError(user, user.id)
+        serializer = FavoriteSerializer(data={'favorite_by_users': user.id})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_serializer(self, *args, **kwargs):
+        """
+        Return the serializer instance that should be used for validating and
+        deserializing input, and for serializing output.
+        """
+        serializer_class = self.get_serializer_class()
+        kwargs['context'] = self.get_serializer_context()
+        return serializer_class(*args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        `.dispatch()` is pretty much the same as Django's regular dispatch,
+        but with extra hooks for startup, finalize, and exception handling.
+        """
+        self.args = args
+        self.kwargs = kwargs
+        request = self.initialize_request(request, *args, **kwargs)
+        self.request = request
+        self.headers = self.default_response_headers  # deprecate?
+
+        # try:
+        #     self.initial(request, *args, **kwargs)
+
+        #     # Get the appropriate handler method
+        #     if request.method.lower() in self.http_method_names:
+        #         handler = getattr(self, request.method.lower(),
+        #                           self.http_method_not_allowed)
+        #     else:
+        #         handler = self.http_method_not_allowed
+
+        #     response = handler(request, *args, **kwargs)
+
+        # except Exception as exc:
+        #     response = self.handle_exception(exc)
+        self.initial(request, *args, **kwargs)
+        handler = getattr(self, request.method.lower())
+        response = handler(request, *args)
+
+        self.response = self.finalize_response(request, response, *args, **kwargs)
+        return self.response
+
+        
+    #     recipe.favorite_by_users.add(user)
+    # def Response(serializer.data, status=status.HTTP_201_CREATED)
