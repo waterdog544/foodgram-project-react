@@ -78,27 +78,55 @@ Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 }
 ###
 ###
-GET       http://127.0.0.1:8000/api/users/me/
+GET       http://127.0.0.1:8000/api/recipes/?is_favorited=0&is_in_shopping_cart=1
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
 ###
-GET       http://127.0.0.1:8000/api/users/subsciptions/
+GET       http://127.0.0.1:8000/api/recipes/?is_in_shopping_cart=1
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+GET       http://127.0.0.1:8000/api/users/subsciptions/?recipes_limit=2
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+GET       http://127.0.0.1:8000/api/users/subsciptions/?limit=2
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+GET       http://127.0.0.1:8000/api/users/me
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+GET       http://127.0.0.1:8000/api/users/subsciptions/?tags=Supper
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+######
+######
+GET       http://127.0.0.1:8000/api/recipes/?tags=Supper
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+GET       http://127.0.0.1:8000/api/users/subsciptions/?recipes_limit=1
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
 
 ###
-GET       http://127.0.0.1:8000/api/users/me/
+GET       http://127.0.0.1:8000/api/users/?email=fk@list.ru
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
-POST      http://127.0.0.1:8000/api/users/1/subscribe/
+POST      http://127.0.0.1:8000/api/users/2/subscribe/
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
 ###
-DELETE       http://127.0.0.1:8000/api/users/1/subscribe/
+DELETE       http://127.0.0.1:8000/api/users/2/subscribe/
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
@@ -108,13 +136,55 @@ DELETE        http://127.0.0.1:8000/api/recipes/1/favorite/
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ######
-GET       http://127.0.0.1:8000/api/recipes/2/
+GET       http://127.0.0.1:8000/api/recipes/?tags=breakfast
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
 ###
 POST      http://127.0.0.1:8000/api/recipes/2/favorite/
 Content-Type: application/json
 Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+DELETE     http://127.0.0.1:8000/api/recipes/2/favorite/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+POST        http://127.0.0.1:8000/api/recipes/2/shopping_cart/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+DELETE       http://127.0.0.1:8000/api/recipes/2/shopping_cart/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+POST      http://127.0.0.1:8000/api/users/2/subscribe/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+DELETE       http://127.0.0.1:8000/api/users/2/subscribe/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+
+GET      http://127.0.0.1:8000/api/recipes/2/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+
+GET      http://127.0.0.1:8000/api/ingredients/?search=сы
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
+###
+
+GET    http://127.0.0.1:8000/api/recipes/download_shopping_cart/
+Content-Type: application/json
+Authorization: Token 94908c40b7e5e3b8ab6aa378549d88627124d60f
+###
 
 # {
 #   "ingredients": [
