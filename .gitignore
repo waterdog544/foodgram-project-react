@@ -130,3 +130,9 @@ dmypy.json
 
 # .idea
 .idea
+/backend/temp
+/backend/templates
+/backend/venv
+.vscode
+/backend/media
+
