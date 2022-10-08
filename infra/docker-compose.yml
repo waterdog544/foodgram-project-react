@@ -7,7 +7,7 @@ services:
       - db_value:/var/lib/postgresql/data/
     env_file:
       - ./.env
-  web:
+  backend:
     build: ../backend/
     restart: always
     command: >
@@ -40,7 +40,7 @@ services:
       - static_value:/var/html/static/
       - media_value:/var/html/media/      
     depends_on:
-      - web
+      - backend
 
 volumes:
   static_value:
