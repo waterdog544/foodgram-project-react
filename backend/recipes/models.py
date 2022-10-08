@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.html import format_html
 
+from backend.settings import MIN_VALUE
 from users.models import User
 
 
@@ -51,7 +52,7 @@ class IngredientRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=(MinValueValidator(0.1),)
+        validators=(MinValueValidator(MIN_VALUE),)
     )
 
     class Meta:
@@ -89,9 +90,9 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин.',
-        validators=(MinValueValidator(1),),
+        validators=(MinValueValidator(MIN_VALUE),),
     )
-    tags_th = models.ManyToManyField(
+    tag_through = models.ManyToManyField(
         'Tag',
         through='TagRecipe',
         verbose_name='Тэги',
@@ -231,6 +232,7 @@ class UserFavoriteRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='favoite',
         verbose_name='Рецепт'
     )
 

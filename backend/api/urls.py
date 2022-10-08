@@ -10,7 +10,7 @@ router.register(r'tags', TagsViewSet, basename='tags')
 router.register(r'recipes', RecipesViewSet, basename='recipes')
 router.register(r'ingredients', IngredientsViewSet, basename='ingredients')
 router.register(
-    r'users/subsciptions', SubscriptionsViewSet, basename='subsciptions'
+    r'users/subscriptions', SubscriptionsViewSet, basename='subsciptions'
 )
 
 urlpatterns = [

@@ -1,12 +1,15 @@
 import django_filters
 from rest_framework.serializers import ValidationError
 
-from recipes.models import Recipe
-from users.models import User
+from recipes.models import Recipe, Tag
 
 
 class RecipeFilter(django_filters.FilterSet):
-    tags = django_filters.CharFilter(field_name='tags_th__slug')
+    tags = django_filters.ModelMultipleChoiceFilter(
+        field_name='tags__tag__slug',
+        to_field_name='slug',
+        queryset=Tag.objects.all()
+    )
 
     class Meta:
         model = Recipe
@@ -29,51 +32,20 @@ class RecipeFilter(django_filters.FilterSet):
         return parent
 
     def get_check_values(self, name: str) -> int:
-        obj = getattr(self.request, 'GET', None).get(name)
+        obj = self.request.GET.get(name)
         if obj is None:
             return None
         try:
             obj_int = int(obj)
-        except Exception as e:
+        except Exception:
             mess = {'errors': (
-                f'{e}. Значение параметра {name} = {obj},'
+                f'Значение параметра {name} = {obj},'
                 f' должно быть: (0, 1).'
             )}
             raise ValidationError(mess)
         if obj_int in (0, 1):
             return obj_int
         elif obj:
-            mess = {'errors': (
-                f'Value Error. Значение параметра {name} = {obj},'
-                f' должно быть: (0, 1).'
-            )}
+            mess = mess
             raise ValidationError(mess)
         return None
-
-
-class SubsciptionsFilter(django_filters.FilterSet):
-
-    class Meta:
-        model = User
-        fields = []
-
-    @property
-    def qs(self):
-        parent = super().qs
-        tags = self.request.GET.get('tags')
-        if tags:
-            return parent.filter(
-                recipes__tags_th__slug=tags
-            ).order_by('-recipes__pub_date').distinct()
-        return parent.order_by('-recipes__pub_date').distinct()
-
-        # for postgres
-        # if tags:
-        #     return parent.filter(
-        #         recipes__tags_th__slug=tags
-        #     ).order_by('recipes__pub_date').distinct(
-        #         'recipes__tags_th__slug', 'recipes__pub_date'
-        #     )
-        # return parent.order_by(
-        #     'recipes__pub_date'
-        #     ).distinct('recipes__pub_date')

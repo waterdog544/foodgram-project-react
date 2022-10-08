@@ -17,30 +17,6 @@ class UserFavoriteRecipeAdmin(admin.ModelAdmin):
     )
 
 
-# class ShoppingCartIngredientAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'id',
-#         'ingredient',
-#         'shopping_cart',
-#         'amount',
-#     )
-#     list_editable = (
-#         'ingredient',
-#         'shopping_cart',
-#         'amount',
-#     )
-#     fields = (
-#         'id',
-#         'ingredient',
-#         'recipe',
-#         'amount',
-#     )
-
-
-# # class ShoppingCartIngredientInline(admin.TabularInline):
-# #     model = ShoppingCartIngredient.ingredient.through
-
-
 class ShoppingCartRecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -58,11 +34,7 @@ class ShoppingCartRecipeAdmin(admin.ModelAdmin):
     fields = (
         'user',
         'recipe',
-        # 'ingredients',
-        # 'amount'
     )
-    # filter_horizontal = ('ingredient',)
-    # inlines = (ShoppingCartIngredientInline,)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -136,7 +108,7 @@ class IngredientInline(admin.TabularInline):
 
 
 class TagInline(admin.TabularInline):
-    model = Recipe.tags_th.through
+    model = Recipe.tag_through.through
 
 
 class RecipeAdmin(admin.ModelAdmin):
