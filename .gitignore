@@ -134,7 +134,7 @@ dmypy.json
 /backend/templates
 /backend/venv
 .vscode
-/backend/media
+
 /backend/.env
 backend/bd.sqlite3
 
