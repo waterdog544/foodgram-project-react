@@ -135,4 +135,6 @@ dmypy.json
 /backend/venv
 .vscode
 /backend/media
+/backend/.env
+backend/bd.sqlite3
 
