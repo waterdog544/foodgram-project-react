@@ -77,4 +77,4 @@ git push
 
 Шванов Андрей, Yandex Практикум
 
-![This is status](https://github.com/waterdog544/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg?status)
+![This is status](https://github.com/waterdog544/foodgram-project-react/actions/workflows/main.yml/badge.svg?status)
