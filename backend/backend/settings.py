@@ -28,11 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-debug_str = os.getenv('DEBUG')
-if debug_str.lower() == 'true':
-    DEBUG = True
-else:
-    DEBUG = False
+DEBUG = os.getenv('DEBUG', '').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -176,4 +172,5 @@ DJOSER = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = "r'^/api/.*$', r'^/admin/.*$'"
-MIN_VALUE = 1
+MIN_TIME = 1
+MIN_AMOUNT = 1

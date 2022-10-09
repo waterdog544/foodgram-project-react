@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.html import format_html
 
-from backend.settings import MIN_VALUE
+from backend.settings import MIN_AMOUNT, MIN_TIME
 from users.models import User
 
 
@@ -52,7 +52,7 @@ class IngredientRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=(MinValueValidator(MIN_VALUE),)
+        validators=(MinValueValidator(MIN_AMOUNT),)
     )
 
     class Meta:
@@ -90,7 +90,7 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин.',
-        validators=(MinValueValidator(MIN_VALUE),),
+        validators=(MinValueValidator(MIN_TIME),),
     )
     tag_through = models.ManyToManyField(
         'Tag',
@@ -110,7 +110,7 @@ class Recipe(models.Model):
     )
 
     def image_tag(self):
-        return format_html('<img src="%s">' % self.image.url)
+        return format_html(f'<img src={self.image.url}>')
     image_tag.short_description = 'Картинка'
 
     @property

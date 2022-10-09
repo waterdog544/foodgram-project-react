@@ -17,12 +17,11 @@ from api.serializers import (FavoriteSerializer, FavoriteSerializerNew,
                              IngredientSerializer, RecipeSerializer,
                              ShoppingCartSerializer, SubscriptionsSerializer,
                              TagSerializer, check_is_favorited,
-                             check_is_in_shopping_cart, check_is_not_favorited,
-                             check_is_not_in_shopping_cart,
+                             check_is_in_shopping_cart,
                              check_is_not_subscribed, check_is_subscribed,
-                             check_recipe_exists, check_user_exists)
+                             get_recipe, get_recipe_in_favorite,
+                             get_recipe_in_shopping_cart, get_user)
 from recipes.models import Ingredient, Recipe, ShoppingCartRecipe, Tag
-from users.models import User
 
 
 @api_view(('GET',))
@@ -50,16 +49,17 @@ def shopping_cart_get(request):
 @api_view(('POST', 'DELETE'))
 @permission_classes((IsAuthenticated,))
 def shopping_cart_set(request, recipe_id):
-    check_recipe_exists(pk=recipe_id)
-    recipe = Recipe.objects.get(pk=recipe_id)
+    recipe = get_recipe(pk=recipe_id)
     user = request.user
     if request.method == 'POST':
         check_is_in_shopping_cart(user=user, recipe=recipe)
         ShoppingCartRecipe.objects.create(user=user, recipe=recipe)
         serializer = FavoriteSerializer(recipe, context={'request': request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    check_is_not_in_shopping_cart(user=user, recipe=recipe)
-    ShoppingCartRecipe.objects.filter(user=user, recipe=recipe).delete()
+    recipe_in_shopping_cart = get_recipe_in_shopping_cart(
+        user=user, recipe=recipe
+    )
+    recipe_in_shopping_cart.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -73,23 +73,6 @@ class SubscriptionsViewSet(viewsets.ModelViewSet):
     )
     pagination_class = PageLimitPagination
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(
-                page,
-                many=True,
-                context={'request': self.request}
-            )
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(
-            queryset,
-            many=True,
-            context={'request': self.request}
-        )
-        return Response(serializer.data)
-
     def get_queryset(self):
         user = self.request.user
         return user.subscribers.prefetch_related(
@@ -100,8 +83,7 @@ class SubscriptionsViewSet(viewsets.ModelViewSet):
 @api_view(('POST', 'DELETE'))
 @permission_classes((IsAuthenticated,))
 def subscribe_set(request, user_id):
-    check_user_exists(pk=user_id)
-    author = User.objects.get(pk=user_id)
+    author = get_user(pk=user_id)
     user = request.user
     if request.method == 'POST':
         check_is_subscribed(user=user, author=author)
@@ -143,16 +125,15 @@ class ShoppingCartViewSet(FavoriteViewSet):
 @api_view(('POST', 'DELETE'))
 @permission_classes((IsAuthenticated,))
 def favorite_set(request, recipe_id):
-    check_recipe_exists(pk=recipe_id)
-    recipe = Recipe.objects.get(pk=recipe_id)
+    recipe = get_recipe(pk=recipe_id)
     user = request.user
     if request.method == 'POST':
         check_is_favorited(user=user, recipe=recipe)
         recipe.favorite_by_users.add(user)
         serializer = FavoriteSerializer(recipe, context={'request': request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    check_is_not_favorited(user=user, recipe=recipe)
-    recipe.favorite_by_users.remove(user)
+    recipe_in_favorite = get_recipe_in_favorite(user=user, recipe=recipe)
+    recipe_in_favorite.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -182,7 +163,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     )
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_class = RecipeFilter
-    filterset_fileds = ('tag_through',)
+    filterset_fileds = ('tags',)
     search_fields = ('^ingredients_th__name',)
     http_method_names = ('get', 'post', 'patch', 'delete', 'head', 'options')
 
