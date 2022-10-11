@@ -17,10 +17,10 @@ from api.serializers import (FavoriteSerializer, FavoriteSerializerNew,
                              IngredientSerializer, RecipeSerializer,
                              ShoppingCartSerializer, SubscriptionsSerializer,
                              TagSerializer, check_is_favorited,
-                             check_is_in_shopping_cart,
-                             check_is_not_subscribed, check_is_subscribed,
+                             check_is_in_shopping_cart, check_is_subscribed,
                              get_recipe, get_recipe_in_favorite,
-                             get_recipe_in_shopping_cart, get_user)
+                             get_recipe_in_shopping_cart, get_subscription,
+                             get_user)
 from recipes.models import Ingredient, Recipe, ShoppingCartRecipe, Tag
 from users.models import Subscriptions, User
 
@@ -91,14 +91,13 @@ def subscribe_set(request, user_id):
     if request.method == 'POST':
         check_is_subscribed(user=user, author=author)
         Subscriptions.objects.create(author=author, follower=user)
-        author.save()
         serializer = SubscriptionsSerializer(
             author,
             context={'request': request}
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    check_is_not_subscribed(author=author, user=user)
-    Subscriptions.objects.filter(author=author, follower=user).delete()
+    subscription = get_subscription(user=user, author=author)
+    subscription.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 

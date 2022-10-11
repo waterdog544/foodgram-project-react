@@ -11,7 +11,7 @@ from backend.settings import MIN_AMOUNT, MIN_TIME
 from recipes.models import (Ingredient, IngredientRecipe, Recipe,
                             ShoppingCartRecipe, Tag, TagRecipe,
                             UserFavoriteRecipe)
-from users.models import User
+from users.models import Subscriptions, User
 
 
 class Base64ImageField(serializers.ImageField):
@@ -447,9 +447,11 @@ def check_is_subscribed(user, author):
         raise ValidationError(error)
 
 
-def check_is_not_subscribed(user, author):
-    if not author.is_subscribed(user):
+def get_subscription(user, author):
+    subscription = Subscriptions.objects.filter(author=author, follower=user)
+    if not subscription.exists():
         error = {'errors': (
             f'Пользователь {user} не подписан на автора c id = {user.id}.'
         )}
         raise ValidationError(error)
+    return subscription
