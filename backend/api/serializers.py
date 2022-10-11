@@ -439,7 +439,7 @@ def get_recipe_in_shopping_cart(user, recipe):
 
 
 def check_is_subscribed(user, author):
-    if user.is_subscribed(author):
+    if author.is_subscribed(user):
         error = {'errors': (
             f'Пользователь "{user}" уже подписан на'
             f' автора {author.username}.'
@@ -448,7 +448,7 @@ def check_is_subscribed(user, author):
 
 
 def check_is_not_subscribed(user, author):
-    if not user.is_subscribed(author):
+    if not author.is_subscribed(user):
         error = {'errors': (
             f'Пользователь {user} не подписан на автора c id = {user.id}.'
         )}
