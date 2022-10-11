@@ -1,8 +1,12 @@
 from django.contrib import admin
+# from django_admin_multiple_choice_list_filter.list_filters import (
+#     # MultipleChoiceListFilter
+# )
 
 from recipes.models import (Ingredient, IngredientRecipe, Recipe,
                             ShoppingCartRecipe, Tag, TagRecipe,
                             UserFavoriteRecipe)
+# from users.models import User
 
 
 class UserFavoriteRecipeAdmin(admin.ModelAdmin):
@@ -15,6 +19,15 @@ class UserFavoriteRecipeAdmin(admin.ModelAdmin):
         'user',
         'recipe'
     )
+    list_filter = ('recipe__tag_through__name',)
+    search_fields = (
+        'recipe__name',
+        'user__email',
+        'user__username'
+    )
+
+
+
 
 
 class ShoppingCartRecipeAdmin(admin.ModelAdmin):
@@ -35,6 +48,12 @@ class ShoppingCartRecipeAdmin(admin.ModelAdmin):
         'user',
         'recipe',
     )
+    list_filter = ('recipe__tag_through__name',)
+    search_fields = (
+        'recipe__name',
+        'recipe__author__email',
+        'recipe__author__username'
+    )
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -50,6 +69,7 @@ class TagAdmin(admin.ModelAdmin):
         'slug'
     )
     list_filter = ('name',)
+    search_fields = ('name',)
 
 
 class TagRecipeAdmin(admin.ModelAdmin):
@@ -61,6 +81,12 @@ class TagRecipeAdmin(admin.ModelAdmin):
     list_editable = (
         'tag',
         'recipe'
+    )
+    list_filter = ('recipe__tag_through',)
+    search_fields = (
+        'recipe__name',
+        'recipe__author__email',
+        'recipe__author__username'
     )
 
 
@@ -78,9 +104,9 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit',
     )
-    list_filter = ('name',)
+    list_filter = ('measurement_unit',)
     empty_value_display = '-пусто-'
-    search_fields = ('name',)
+    search_fields = ('name', )
 
 
 class IngredientRecipeAdmin(admin.ModelAdmin):
@@ -99,6 +125,12 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
         'ingredient',
         'recipe',
         'amount',
+    )
+    list_filter = ('recipe__tag_through',)
+    search_fields = (
+        'recipe__name',
+        'recipe__author__email',
+        'recipe__author__username'
     )
     empty_value_display = '-пусто-'
 
@@ -141,10 +173,13 @@ class RecipeAdmin(admin.ModelAdmin):
         'cooking_time',
     )
     list_filter = (
-        'name',
-        'author',
-        'tags',
+        'tag_through',
     )
+    search_fields = (
+        'name',
+        'author__email',
+        'author__username'
+    )    
     empty_value_display = '-пусто-'
 
 

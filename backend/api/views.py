@@ -9,7 +9,7 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from api.filters import RecipeFilter
+from api.filters import IngredientFilter, RecipeFilter
 from api.paginations import PageLimitPagination
 from api.permissions import (IsAdminOrReadOnly, IsAdminOrReadOnlyObj,
                              IsAuthorOrAdminOrReadOnly)
@@ -142,7 +142,7 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     pagination_class = None
     permission_classes = (IsAdminOrReadOnly, IsAdminOrReadOnlyObj)
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (IngredientFilter,)
     search_fields = ('^name',)
 
 

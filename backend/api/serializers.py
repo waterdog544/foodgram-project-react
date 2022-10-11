@@ -192,14 +192,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_name(self, name):
-        author = self.context['request'].user
-        if Recipe.objects.filter(
-            name=name,
-            author=author
-        ).exists():
-            raise serializers.ValidationError(
-                f'У автора {author} уже есть рецепт {name}.'
-            )
+        if self.context['request'].method.lower() == 'post':
+            author = self.context['request'].user
+            if Recipe.objects.filter(
+                name=name,
+                author=author
+            ).exists():
+                raise serializers.ValidationError(
+                    f'У автора {author} уже есть рецепт {name}.'
+                )
         return name
 
     def get_is_favorited(self, obj):

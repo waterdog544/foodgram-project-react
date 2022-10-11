@@ -7,8 +7,8 @@ services:
       - db_value:/var/lib/postgresql/data/
     env_file:
       - ./.env
-  web:
-    build: ../backend/
+  backend:
+    image: wimsau/backend:latest
     restart: always
     command: >
       sh -c "python manage.py migrate &&
@@ -23,9 +23,7 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: wimsau/frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
   nginx:
@@ -40,7 +38,7 @@ services:
       - static_value:/var/html/static/
       - media_value:/var/html/media/      
     depends_on:
-      - web
+      - backend
 
 volumes:
   static_value:
