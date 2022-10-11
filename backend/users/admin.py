@@ -3,11 +3,6 @@ from django.contrib import admin
 from users.models import Subscriptions, User
 
 
-class FavoriteByUserInline(admin.TabularInline):
-    model = User.subscribers.through
-    fk_name = 'author'
-
-
 class SubscriptionsAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -26,7 +21,6 @@ class SubscriptionsAdmin(admin.ModelAdmin):
         'author',
         'follower',
     )
-
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -49,8 +43,6 @@ class UserAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     search_fields = ('email', 'username')
     list_filter = ('is_staff', 'is_superuser')
-    inlines = (FavoriteByUserInline,)
-
 
 
 admin.site.register(User, UserAdmin)

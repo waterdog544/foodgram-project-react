@@ -1,11 +1,13 @@
 from django.contrib import admin
-# from django_admin_multiple_choice_list_filter.list_filters import (
-#     # MultipleChoiceListFilter
-# )
 
 from recipes.models import (Ingredient, IngredientRecipe, Recipe,
                             ShoppingCartRecipe, Tag, TagRecipe,
                             UserFavoriteRecipe)
+
+# from django_admin_multiple_choice_list_filter.list_filters import (
+#     # MultipleChoiceListFilter
+# )
+
 # from users.models import User
 
 
@@ -25,9 +27,6 @@ class UserFavoriteRecipeAdmin(admin.ModelAdmin):
         'user__email',
         'user__username'
     )
-
-
-
 
 
 class ShoppingCartRecipeAdmin(admin.ModelAdmin):
@@ -179,7 +178,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'author__email',
         'author__username'
-    )    
+    )
     empty_value_display = '-пусто-'
 
 

@@ -6,7 +6,7 @@ class Subscriptions(models.Model):
     author = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
-        related_name='subscribed_by',
+        related_name='subscribers',
         verbose_name='Автор'
     )
     follower = models.ForeignKey(
@@ -17,7 +17,7 @@ class Subscriptions(models.Model):
     )
 
     def __str__(self):
-        return f'{self.folower} на {self.author} '
+        return f'{self.follower} на {self.author} '
 
     class Meta:
         verbose_name = 'Подписка'
@@ -56,31 +56,12 @@ class User(AbstractUser):
         verbose_name='Избранные рецепты'
 
     )
-    subscribers = models.ManyToManyField(
-        'self',
-        through=Subscriptions,
-        blank=True,
-        # related_name='subscribed',
-        verbose_name='Подписчики'
-    )
-    # subscriptions = models.ForeignKey(
-    #     'Subscriptions',
-    #     on_delete=models.CASCADE,
-    #     related_name='follower',
-    #     verbose_name='Подписки'
-    # )
-    # subscribed_by = models.ForeignKey(
-    #     'Subscriptions',
-    #     on_delete=models.CASCADE,
-    #     related_name='author',
-    #     verbose_name='Подписчики'
-    # )
 
     def __str__(self):
         return self.username
 
     def is_subscribed(self, anyuser):
-        return self.subscribers.filter(id=anyuser.id).exists()
+        return self.subscribers.filter(follower=anyuser).exists()
 
     @property
     def recipes_count(self):

@@ -22,6 +22,7 @@ from api.serializers import (FavoriteSerializer, FavoriteSerializerNew,
                              get_recipe, get_recipe_in_favorite,
                              get_recipe_in_shopping_cart, get_user)
 from recipes.models import Ingredient, Recipe, ShoppingCartRecipe, Tag
+from users.models import Subscriptions, User
 
 
 @api_view(('GET',))
@@ -75,7 +76,9 @@ class SubscriptionsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return user.subscribers.prefetch_related(
+        return User.objects.filter(
+            subscribers__follower=user
+        ).prefetch_related(
             'recipes', 'recipes__tags__tag'
         ).all()
 
@@ -87,7 +90,7 @@ def subscribe_set(request, user_id):
     user = request.user
     if request.method == 'POST':
         check_is_subscribed(user=user, author=author)
-        author.subscribers.add(user)
+        Subscriptions.objects.create(author=author, follower=user)
         author.save()
         serializer = SubscriptionsSerializer(
             author,
@@ -95,7 +98,7 @@ def subscribe_set(request, user_id):
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     check_is_not_subscribed(author=author, user=user)
-    author.subscribers.remove(user)
+    Subscriptions.objects.filter(author=author, follower=user).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
