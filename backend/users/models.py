@@ -61,7 +61,7 @@ class User(AbstractUser):
         return self.username
 
     def is_subscribed(self, anyuser):
-        return self.subscribers.filter(follower=anyuser).exists()
+        return self.subscribers.filter(follower=anyuser.id).exists()
 
     @property
     def recipes_count(self):
