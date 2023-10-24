@@ -182,8 +182,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise ValidationError(
                     [{"id": [f'{i["ingredient"].name} повторяются.']}]
                 )
-            else:
-                id_list.append(i['ingredient'].id)
+            id_list.append(i['ingredient'].id)
             if i['amount'] < MIN_AMOUNT:
                 raise ValidationError(
                     f'Количество {i["ingredient"].name} '
