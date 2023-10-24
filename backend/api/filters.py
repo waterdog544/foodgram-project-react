@@ -30,9 +30,9 @@ class RecipeFilter(django_filters.FilterSet):
             return parent.filter(
                 favorite_by_users=user
             ).filter(shopping_cart_recipes__user=user)
-        elif is_favorited:
+        if is_favorited:
             return parent.filter(favorite_by_users=user)
-        elif is_in_shopping_cart:
+        if is_in_shopping_cart:
             return parent.filter(shopping_cart_recipes__user=user)
         return parent
 
@@ -50,7 +50,7 @@ class RecipeFilter(django_filters.FilterSet):
             raise ValidationError(mess)
         if obj_int in (0, 1):
             return obj_int
-        elif obj:
+        if obj:
             mess = mess
             raise ValidationError(mess)
         return None
